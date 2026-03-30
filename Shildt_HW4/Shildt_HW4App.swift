@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+internal import CoreData
 
 @main
-struct Shildt_HW4App: App {
+struct BookSearchAppApp: App {
+    let persistenceController = PersistenceController.shared
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
+
