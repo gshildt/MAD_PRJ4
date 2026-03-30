@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
+    @State private var favoritesChangeObserver: NSObjectProtocol?
     
     var body: some View {
         NavigationStack {
@@ -76,5 +77,17 @@ struct SearchView: View {
             }
             .listStyle(.plain)
         }
+        .onAppear {
+            favoritesChangeObserver = NotificationCenter.default.addObserver(forName: .favoritesDidChange, object: nil, queue: .main) { _ in
+                Task { await viewModel.loadFavorites() }
+            }
+        }
+        .onDisappear {
+            if let token = favoritesChangeObserver {
+                NotificationCenter.default.removeObserver(token)
+                favoritesChangeObserver = nil
+            }
+        }
     }
 }
+

@@ -4,7 +4,6 @@ import Combine
 
 @MainActor
 final class SearchViewModel: ObservableObject {
-    var objectWillChange: ObservableObjectPublisher
     
     @Published var query: String = ""
     @Published var books: [Book] = []
@@ -17,7 +16,6 @@ final class SearchViewModel: ObservableObject {
     @Published var favoriteIDs: Set<String> = []
     
     init(api: BookAPIServiceProtocol, favoritesStorage: FavoritesStorageProtocol) {
-        self.objectWillChange = .init()
         self.api = api
         self.favoritesStorage = favoritesStorage
         Task { await loadFavorites() }
@@ -62,7 +60,7 @@ final class SearchViewModel: ObservableObject {
         favoriteIDs.contains(book.id)
     }
     
-    private func loadFavorites() async {
+    func loadFavorites() async {
         do {
             let favorites = try favoritesStorage.fetchFavorites()
             favoriteIDs = Set(favorites.map { $0.id })

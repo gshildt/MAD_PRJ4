@@ -7,11 +7,13 @@ struct RootView: View {
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
+                .onAppear { print("SearchView loaded") } // Debug print
             
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "heart.fill")
                 }
+                .onAppear { print("FavoritesView loaded") } // Debug print
         }
     }
 }

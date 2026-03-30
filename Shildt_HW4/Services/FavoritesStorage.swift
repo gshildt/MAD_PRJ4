@@ -1,6 +1,10 @@
 internal import CoreData
 import Foundation
 
+extension Notification.Name {
+    static let favoritesDidChange = Notification.Name("FavoritesDidChange")
+}
+
 protocol FavoritesStorageProtocol {
     func fetchFavorites() throws -> [Book]
     func isFavorite(id: String) throws -> Bool
@@ -35,6 +39,7 @@ final class FavoritesStorage: FavoritesStorageProtocol {
         entity.thumbnailURL = book.thumbnailURL?.absoluteString
         entity.bookDescription = book.description
         try context.save()
+        NotificationCenter.default.post(name: .favoritesDidChange, object: nil)
     }
     
     func removeFavorite(id: String) throws {
@@ -43,6 +48,7 @@ final class FavoritesStorage: FavoritesStorageProtocol {
         let results = try context.fetch(request)
         results.forEach(context.delete)
         try context.save()
+        NotificationCenter.default.post(name: .favoritesDidChange, object: nil)
     }
 }
 
